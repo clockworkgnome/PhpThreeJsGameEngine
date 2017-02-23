@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather|Oswald|Tangerine');
+/* 	STYLE.CSS:	One stylesheet to rule them all.		selector { property:value }	
+fonts for site are 
+font-family: 'Tangerine', cursive;
+font-family: 'Oswald', sans-serif;
+font-family: 'Merriweather', serif;
+background-color: #332200;Dark Brown
+background-color: #334400;  Dark green
+background-color: #334422;  grey green
+paragraph text color: #669900; green
+header color color: #ffce00; gold
+*/
+
+header {
+    padding-top:20px;
+    padding-bottom:20px;
+    height: 50px;
+    background-color: #332200; /* Dark Brown */
+}
+header h1{
+    font-size:60px;
+}
+ 
+main {
+     background-color: #444400; /* Dark green */
+     padding-bottom:20px;
+     
+}
+ 
+footer {
+     background-color: #332200; /* Dark Brown */
+     height:100%;
+     padding-top:20px;
+}
+
+/* this is the main wrapper for the page */
+.wrapper {
+  width: 1060px; /*this is the width of the main page content */
+  margin: auto; /* this centers the page*/
+}
+/* this is thr wrapper for the jumbo tron */
+.jumboTron{
+   position:absolute;
+   max-width:100%;
+   max-height:100%;
+   width:auto;
+   height:auto;
+}
+
+/*this is the leftBox*/
+.leftBox{
+    background-color: #334400;
+    background: rgba(76, 175, 80, 0.3);
+    border-radius: 25px;
+    padding: 10px 10px 10px 10px;
+    width:265px;
+    float:left;
+    margin: 40px 40px 40px 40px;
+}
+.midBox{
+    background-color: #334400;
+    background: rgba(76, 175, 80, 0.3);
+    border-radius: 25px;
+    margin: 40px 40px 40px 40px;
+    width:265px;
+    display: inline-block; width: 33%;
+    
+}
+.rightBox{
+    background-color: #334400;
+    background: rgba(76, 175, 80, 0.3);
+    border-radius: 25px;
+    padding: 10px 10px 10px 10px;
+    width:265px;
+    float:right;
+    margin: 40px 40px 40px 40px;
+    
+}
+p  { 
+color: #669900; /* green */
+text-decoration:none; /*none, underline, line-through, overline
+text-transform:none; /* lowercase, uppercase, capitalize, none */
+line-height:100%; /* in percent how close the lines of text are to eachother default is 100% */
+letter-spacing:1px; /* the amount of space between each letter */
+font-family: 'Merriweather', serif; /* the name of the font to use */
+font-size:14px; /* the size of the font */
+font-style:normal; /* normal italic oblique */
+font-weight:normal; /* normal bold bolder lighter */
+text-align: center; /* can be left right or center */
+}
+h1 {
+margin: 0;/* this removes the space above the header */
+color: #ffce00; /* golden rod */
+text-decoration:none;
+text-transform:capitalize;
+line-height:100%;
+letter-spacing:1px;
+font-family: 'Tangerine', cursive; 
+font-size:40px;
+font-style:normal;
+font-weight:bolder;
+text-align: center;
+}
+h2 {
+margin: 0; /* this removes the space above the header */
+color: #ffce00; /* golden rod */
+text-decoration:none;
+text-transform:capitalize;
+line-height:100%;
+letter-spacing:1px;
+font-family: 'Tangerine', cursive;
+font-size:40px;
+font-style:normal;
+font-weight:bolder;
+text-align: center;
+}
+img { width: 100%; } /* changes the image width to the size of the wrapper*/
+a:link    { color: #669900; text-decoration:none;} 
+a:visited { color: #667700; text-decoration:none;} 
+a:hover   { color: #66FF00; text-decoration:none;} 
+a:active  { color: #66FF00; text-decoration:none;}

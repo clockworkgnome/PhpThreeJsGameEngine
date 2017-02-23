@@ -1,0 +1,195 @@
+<html>
+
+<head>
+    <title>Julian's Hangman Game</title>
+
+    <style media="screen" type="text/css">
+        textarea {
+            resize: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wordSpace">
+    </div>
+    <img src="hangman0.jpg" height="300" width="300" class="images"><br>
+    <form name="hangman" class="myform" id="hangman">
+        <label for="guess">Enter Guess Here:</label><input type="textbox" id="guess" class="textbox">
+        <input type="button" value="Submit" id="clickMe"><br>
+        <label for="usedGuesses">Used Guesses:</label>
+        <div id="usedGuesses">
+        </div>
+        <div id="dictionary">
+        </div>
+    </form>
+</body>
+<script>
+    //this is the event handler for the button theuser clicks to submit their response
+    document.getElementById("clickMe").addEventListener("click", updateGameState);
+    // this makes it easier to refer to  the dictionary div
+    var fileDisplayArea = document.getElementById('dictionary');
+    //this is the array that holds the users guesses
+    var arrAnswers = [];
+    // this is the variable that holds the users current guess
+    var userGuess = "";
+
+    // this funtion opens a text file on the server that contains a dictionary
+    // it chooses a word fromthe dictionary at random for the user to guess
+    function pickWord(file) {
+        // this var will hold the word the user will try to guess
+        var myWord = "";
+        //the following lines make a get request fromthe server to serve up a text file
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, false);
+        // when  the server connects check the state
+        rawFile.onreadystatechange = function() {
+            if (rawFile.readyState === 4) //when the file is fully loaded
+            {
+                // check file ststus
+                /**
+                 * rawFile.status Outputs the following:
+                 *
+                 * UNSENT 0
+                 * OPENED 0
+                 * LOADING 200
+                 * DONE 200
+                 */
+                if (rawFile.status === 200 || rawFile.status == 0) {
+                    // the request was successful retreive the contents
+                    // this var holds the text of the file requested
+                    var allText = rawFile.responseText;
+                    // thisvar creates an array from the file text that holds each word in the dictionary
+                    var myWords = allText.split(/\r\n|\r|\n/g);
+                    // this var creates a random number
+                    var myWordIndex = Math.floor(Math.random() * myWords.length + 1);
+                    //use the random number as an index for the dictionary array to select a random word
+                    myWord = myWords[myWordIndex];
+                    //fthis variable will hold dashes representing each letter in the word
+                    var mySpaces = "";
+                    // the following displays the dashes to the user
+                    for (i = 0; i < myWord.length; i++) {
+                        mySpaces += " _";
+                    }
+                    document.getElementById("wordSpace").innerHTML = mySpaces;
+                }
+            }
+        }
+        rawFile.send(null);
+        //returns the random word from the dictionary text file
+        return myWord;
+    }
+    // this var holds the random word the user must guess
+    var daWord = pickWord("http://www.jujugaming.com/words.txt");
+    // this is the word the user must guess split into letters
+    var wordLetters = daWord.split("");
+    // this is an array that will hold the correct guesses
+    var arrCorrectGuesses = [];
+    //this is the number of guesses left;
+    var guessesLeft=10;
+
+    // the following fuction gets the users guess after user clicks submit
+    function getGuess() {
+        //this is to tell if the user made a correct guess
+        var guessRight = false;
+        //this pulls the users input fromthe text field
+        userGuess = document.getElementById('guess').value
+        // check to see if answer is a single character
+        if (userGuess.length === 1) {
+            //this checks to see if the guess has been used or not
+            var hasBeenUsed = setupAnswerArray(userGuess);
+            document.getElementById('guess').innerHTML = "";
+            // if the users guess has not been guessed befor
+            if (hasBeenUsed === false) {
+                // check the guess against the word to guess
+                for (i = 0; i < wordLetters.length; i++) {
+                  // if the letter was found in the word to guess make guess right true
+                    if (userGuess === wordLetters[i]) {
+                        guessRight = true;
+                    }
+                }
+                // if the user guessed a correct letter add it to the arrCorrectGuesses
+                if (guessRight === true) {
+                    arrCorrectGuesses.push(userGuess);
+                    return true;
+                } else {
+                  // if the user guessed incorrectly then
+                    return false;
+                }
+
+            } else {
+                //the user hs used this guess before alert them
+                alert("You have guessed this befor try again :)");
+            }
+        } else {
+            alert("you may only enter a single character at a time");
+        }
+
+    }
+
+    // the following fuction checks the users guess and puts it in the answer array
+    function setupAnswerArray(guess) {
+        // this will be used to check and see if the guess has been used allready
+        var guessChecker = false;
+        //cycle through all the answers
+        for (i = 0; i < arrAnswers.length; i++) {
+            //if one of the answers matches a previous guess set guess checker to true
+            if (arrAnswers[i] === guess) {
+                guessChecker = true;
+            }
+        }
+        //when guess checker is true the send user a message the guess has been used
+        if (guessChecker === true) {
+            return guessChecker;
+        } else {
+            // if the guess has not been used add it to the anwser array
+            arrAnswers.push(guess);
+            document.getElementById('usedGuesses').innerHTML = arrAnswers.join();
+            return guessChecker;
+        }
+
+    }
+
+    function updateGameState() {
+        var isGuessGood = getGuess();
+        // the user guessed wrong alert them and update game
+        if (isGuessGood === false) {
+          // subtract a guess from the count
+          guessesLeft=guessesLeft-1;
+          if(guessesLeft>0){
+            alert("Incorrect Guess X.X ");
+            showPlayerProgress(false);
+            document.getElementById('guess').innerHTML = "";
+          }else{
+            alert("Game Over!");
+          }
+        }else{
+          // the user guesses right update the game
+          showPlayerProgress(true);
+          document.getElementById('guess').innerHTML = "";
+        }
+    }
+
+    function showPlayerProgress(answer){
+      var retString="";
+      if(answer===true){
+        //display the answer with correct guesses and dashes for letters unknown yet
+
+          for(x=0;x<arrCorrectGuesses.length;x++){
+            for (i = 0; i < wordLetters.length; i++) {
+            if(wordLetters[i]===arrCorrectGuesses[x]){
+                retString+=arrCorrectGuesses[x];
+            }else{
+              retString+=" _";
+            }
+          }
+
+        }
+      }
+      document.getElementById("wordSpace").innerHTML=daWord+"<br>"+retString;
+    }
+
+    //showAnswerAndCongratulatePlayer
+</script>
+
+</html>
